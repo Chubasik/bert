@@ -84,6 +84,10 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu, 
         optimizer = tf.train.RMSPropOptimizer(
             learning_rate=learning_rate,
         )
+    elif type == 'lars':
+        optimizer = tf.contrib.opt.LARSOptimizer(
+            learning_rate=learning_rate,
+        )
     else:
         raise ValueError()
 
