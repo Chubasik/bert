@@ -93,6 +93,10 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu, 
             learning_rate=learning_rate,
             use_nesterov=True,
         )
+    elif type == 'adamax':
+        optimizer = tf.contrib.opt.AdaMaxOptimizer(
+            learning_rate=learning_rate,
+        )
     else:
         raise ValueError()
 
