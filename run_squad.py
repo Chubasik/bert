@@ -660,7 +660,7 @@ def model_fn_builder(bert_config, init_checkpoint, learning_rate,
       total_loss = (start_loss + end_loss) / 2.0
 
       train_op = optimization.create_optimizer(
-          total_loss, learning_rate, num_train_steps, num_warmup_steps, use_tpu, type='sgd')
+          total_loss, learning_rate, num_train_steps, num_warmup_steps, use_tpu, type='adam_pure')
 
       output_spec = tf.contrib.tpu.TPUEstimatorSpec(
           mode=mode,
