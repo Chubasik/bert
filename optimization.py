@@ -88,6 +88,11 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu, 
         optimizer = tf.contrib.opt.LARSOptimizer(
             learning_rate=learning_rate,
         )
+    elif type == 'lars_nesterov':
+        optimizer = tf.contrib.opt.LARSOptimizer(
+            learning_rate=learning_rate,
+            use_nesterov=True,
+        )
     else:
         raise ValueError()
 
