@@ -97,6 +97,10 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu, 
         optimizer = tf.contrib.opt.AdaMaxOptimizer(
             learning_rate=learning_rate,
         )
+    elif type == 'nadam':
+        optimizer = tf.contrib.opt.NadamOptimizer(
+            learning_rate=learning_rate,
+        )
     else:
         raise ValueError()
 
