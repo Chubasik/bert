@@ -80,6 +80,10 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu, 
         optimizer = tf.train.AdadeltaOptimizer(
             learning_rate=learning_rate,
         )
+    elif type == 'rmsprop':
+        optimizer = tf.train.RMSPropOptimizer(
+            learning_rate=learning_rate,
+        )
     else:
         raise ValueError()
 
