@@ -153,6 +153,10 @@ flags.DEFINE_float(
     "null_score_diff_threshold", 0.0,
     "If null_score - best_non_null is greater than the threshold predict null.")
 
+flags.DEFINE_string(
+    "optimizer_type", 'adam',
+    "optimizer_type")
+
 
 class SquadExample(object):
   """A single training/test example for simple sequence classification.
@@ -660,7 +664,7 @@ def model_fn_builder(bert_config, init_checkpoint, learning_rate,
       total_loss = (start_loss + end_loss) / 2.0
 
       train_op = optimization.create_optimizer(
-          total_loss, learning_rate, num_train_steps, num_warmup_steps, use_tpu, type='adam_pure')
+          total_loss, learning_rate, num_train_steps, num_warmup_steps, use_tpu, type=FLAGS.optimizer_type)
 
       output_spec = tf.contrib.tpu.TPUEstimatorSpec(
           mode=mode,
