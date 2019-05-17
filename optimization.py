@@ -76,6 +76,10 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu, 
         optimizer = tf.train.AdagradOptimizer(
             learning_rate=learning_rate,
         )
+    elif type == 'adadelta':
+        optimizer = tf.train.AdadeltaOptimizer(
+            learning_rate=learning_rate,
+        )
     else:
         raise ValueError()
 
