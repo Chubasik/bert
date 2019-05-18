@@ -121,11 +121,13 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu, 
     elif type == 'adabound':
         optimizer = AdaBoundOptimizer(
             learning_rate=learning_rate,
+            exclude_from_weight_decay=["LayerNorm", "layer_norm", "bias"]
         )
     elif type == 'amsbound':
         optimizer = AdaBoundOptimizer(
             learning_rate=learning_rate,
             amsbound=True,
+            exclude_from_weight_decay=["LayerNorm", "layer_norm", "bias"]
         )
     else:
         raise ValueError()
