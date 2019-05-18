@@ -480,13 +480,13 @@ class AdaBoundOptimizer(tf.train.Optimizer):
             param_name = self._get_variable_name(param.name)
 
             m = tf.get_variable(
-                name=param_name + "/adabound_m",
+                name=param_name + "/adam_m",
                 shape=param.shape.as_list(),
                 dtype=tf.float32,
                 trainable=False,
                 initializer=tf.zeros_initializer())
             v = tf.get_variable(
-                name=param_name + "/adabound_v",
+                name=param_name + "/adam_v",
                 shape=param.shape.as_list(),
                 dtype=tf.float32,
                 trainable=False,
