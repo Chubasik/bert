@@ -106,6 +106,10 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu, 
             weight_decay=0.01,
             learning_rate=learning_rate,
         )
+    elif type == 'addsign':
+        optimizer = tf.contrib.opt.AddSignOptimizer(
+            learning_rate=learning_rate,
+        )
     else:
         raise ValueError()
 
