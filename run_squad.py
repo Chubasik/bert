@@ -288,7 +288,7 @@ def read_squad_examples(input_file, is_training):
                 doc_tokens[start_position:(end_position + 1)])
             cleaned_answer_text = " ".join(
                 tokenization.whitespace_tokenize(orig_answer_text))
-            if actual_text.find(cleaned_answer_text) == -1:
+            if actual_text.lower().find(cleaned_answer_text.lower()) == -1:
               tf.logging.warning("Could not find answer: '%s' vs. '%s'",
                                  actual_text, cleaned_answer_text)
               continue
