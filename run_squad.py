@@ -584,7 +584,7 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
   logits = tf.matmul(final_hidden_matrix, output_weights, transpose_b=True)
   logits = tf.nn.bias_add(logits, output_bias)
 
-  logits = tf.matmul(final_hidden_matrix, output_weights_2, transpose_b=True)
+  logits = tf.matmul(logits, output_weights_2, transpose_b=True)
   logits = tf.nn.bias_add(logits, output_bias_2)
 
   logits = tf.reshape(logits, [batch_size, seq_length, 2])
