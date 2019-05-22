@@ -153,6 +153,8 @@ flags.DEFINE_float(
     "null_score_diff_threshold", 0.0,
     "If null_score - best_non_null is greater than the threshold predict null.")
 
+flags.DEFINE_integer("output_hidden_num", 1, "Output hidden num")
+
 
 class SquadExample(object):
   """A single training/test example for simple sequence classification.
@@ -565,27 +567,36 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
   seq_length = final_hidden_shape[1]
   hidden_size = final_hidden_shape[2]
 
-  output_weights = tf.get_variable(
-      "cls/squad/output_weights", [hidden_size // 2, hidden_size],
-      initializer=tf.truncated_normal_initializer(stddev=0.02))
-
-  output_bias = tf.get_variable(
-      "cls/squad/output_bias", [hidden_size // 2], initializer=tf.zeros_initializer())
-
-  output_weights_2 = tf.get_variable(
-      "cls/squad/output_weights_2", [2, hidden_size // 2],
-      initializer=tf.truncated_normal_initializer(stddev=0.02))
-
-  output_bias_2 = tf.get_variable(
-      "cls/squad/output_bias_2", [2], initializer=tf.zeros_initializer())
-
   final_hidden_matrix = tf.reshape(final_hidden,
                                    [batch_size * seq_length, hidden_size])
-  logits = tf.matmul(final_hidden_matrix, output_weights, transpose_b=True)
-  logits = tf.nn.bias_add(logits, output_bias)
 
-  logits = tf.matmul(logits, output_weights_2, transpose_b=True)
-  logits = tf.nn.bias_add(logits, output_bias_2)
+
+# multilayer output
+  current_hidden_size = hidden_size
+  hidden_matrix = final_hidden_matrix
+  for layer_idx in range(FLAGS.output_hidden_num - 1):
+      output_weights = tf.get_variable(
+          "cls/squad/output_weights_{}".format(layer_idx), [current_hidden_size // 2, current_hidden_size],
+          initializer=tf.truncated_normal_initializer(stddev=0.02))
+
+      output_bias = tf.get_variable(
+          "cls/squad/output_bias_{}".format(layer_idx), [current_hidden_size // 2], initializer=tf.zeros_initializer())
+
+      current_hidden_size //= 2
+
+      hidden_matrix = tf.matmul(hidden_matrix, output_weights, transpose_b=True)
+      hidden_matrix = tf.nn.bias_add(hidden_matrix, output_bias)
+
+
+  final_weights = tf.get_variable(
+      "cls/squad/final_weights", [2, current_hidden_size],
+      initializer=tf.truncated_normal_initializer(stddev=0.02))
+
+  final_bias = tf.get_variable(
+      "cls/squad/final_bias", [2], initializer=tf.zeros_initializer())
+
+  logits = tf.matmul(hidden_matrix, final_weights, transpose_b=True)
+  logits = tf.nn.bias_add(logits, final_bias)
 
   logits = tf.reshape(logits, [batch_size, seq_length, 2])
   logits = tf.transpose(logits, [2, 0, 1])
