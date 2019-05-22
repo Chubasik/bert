@@ -572,10 +572,20 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
   output_bias = tf.get_variable(
       "cls/squad/output_bias", [2], initializer=tf.zeros_initializer())
 
+  output_weights_2 = tf.get_variable(
+      "cls/squad/output_weights_2", [2, hidden_size // 2],
+      initializer=tf.truncated_normal_initializer(stddev=0.02))
+
+  output_bias_2 = tf.get_variable(
+      "cls/squad/output_bias_2", [2], initializer=tf.zeros_initializer())
+
   final_hidden_matrix = tf.reshape(final_hidden,
                                    [batch_size * seq_length, hidden_size])
   logits = tf.matmul(final_hidden_matrix, output_weights, transpose_b=True)
   logits = tf.nn.bias_add(logits, output_bias)
+
+  logits = tf.matmul(final_hidden_matrix, output_weights_2, transpose_b=True)
+  logits = tf.nn.bias_add(logits, output_bias_2)
 
   logits = tf.reshape(logits, [batch_size, seq_length, 2])
   logits = tf.transpose(logits, [2, 0, 1])
