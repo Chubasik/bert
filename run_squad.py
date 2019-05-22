@@ -566,11 +566,11 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
   hidden_size = final_hidden_shape[2]
 
   output_weights = tf.get_variable(
-      "cls/squad/output_weights", [2, hidden_size],
+      "cls/squad/output_weights", [hidden_size // 2, hidden_size],
       initializer=tf.truncated_normal_initializer(stddev=0.02))
 
   output_bias = tf.get_variable(
-      "cls/squad/output_bias", [2], initializer=tf.zeros_initializer())
+      "cls/squad/output_bias", [hidden_size // 2], initializer=tf.zeros_initializer())
 
   output_weights_2 = tf.get_variable(
       "cls/squad/output_weights_2", [2, hidden_size // 2],
