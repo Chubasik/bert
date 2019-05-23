@@ -602,8 +602,6 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
   logits = tf.matmul(hidden_matrix, final_weights, transpose_b=True)
   logits = tf.nn.bias_add(logits, final_bias)
 
-  if FLAGS.output_activation == 'relu':
-      logits = tf.nn.relu(logits)
 
   logits = tf.reshape(logits, [batch_size, seq_length, 2])
   logits = tf.transpose(logits, [2, 0, 1])
