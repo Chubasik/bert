@@ -155,6 +155,8 @@ flags.DEFINE_float(
 
 flags.DEFINE_integer("output_hidden_num", 1, "Output hidden num")
 
+flags.DEFINE_string("output_activation", None, "Output activation")
+
 
 class SquadExample(object):
   """A single training/test example for simple sequence classification.
@@ -586,6 +588,8 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
 
       hidden_matrix = tf.matmul(hidden_matrix, output_weights, transpose_b=True)
       hidden_matrix = tf.nn.bias_add(hidden_matrix, output_bias)
+      if FLAGS.output_activation == 'relu':
+          hidden_matrix = tf.nn.relu(hidden_matrix)
 
 
   final_weights = tf.get_variable(
@@ -597,6 +601,9 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
 
   logits = tf.matmul(hidden_matrix, final_weights, transpose_b=True)
   logits = tf.nn.bias_add(logits, final_bias)
+
+  if FLAGS.output_activation == 'relu':
+      logits = tf.nn.relu(logits)
 
   logits = tf.reshape(logits, [batch_size, seq_length, 2])
   logits = tf.transpose(logits, [2, 0, 1])
