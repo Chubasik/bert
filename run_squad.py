@@ -590,6 +590,8 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
       hidden_matrix = tf.nn.bias_add(hidden_matrix, output_bias)
       if FLAGS.output_activation == 'relu':
           hidden_matrix = tf.nn.relu(hidden_matrix)
+      elif FLAGS.output_activation == 'gelu':
+          hidden_matrix = modeling.gelu(hidden_matrix)
 
 
   final_weights = tf.get_variable(
