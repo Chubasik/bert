@@ -159,6 +159,8 @@ flags.DEFINE_string("output_activation", None, "Output activation")
 
 flags.DEFINE_integer("freeze_layers_num", 0, "Number of BERT layers to freeze")
 
+flags.DEFINE_bool("freeze_embeddings", False, "Number of BERT layers to freeze")
+
 
 class SquadExample(object):
   """A single training/test example for simple sequence classification.
@@ -691,7 +693,8 @@ def model_fn_builder(bert_config, init_checkpoint, learning_rate,
 
       train_op = optimization.create_optimizer(
           total_loss, learning_rate, num_train_steps, num_warmup_steps, use_tpu,
-          freeze_layers_num=FLAGS.freeze_layers_num)
+          freeze_layers_num=FLAGS.freeze_layers_num,
+          freeze_embeddings=FLAGS.freeze_embeddings)
 
       output_spec = tf.contrib.tpu.TPUEstimatorSpec(
           mode=mode,

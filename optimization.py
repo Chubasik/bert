@@ -22,7 +22,7 @@ import re
 import tensorflow as tf
 
 
-def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu, freeze_layers_num=0):
+def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu, freeze_layers_num=0,  freeze_embeddings=False):
   """Creates an optimizer training op."""
   global_step = tf.train.get_or_create_global_step()
 
@@ -72,6 +72,9 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu, 
     indices = list(range(0, freeze_layers_num))
     for idx in indices:
       tvars = [var for var in tvars if 'bert/encoder/layer_{}/attention'.format(idx) not in var.name]
+
+  if freeze_embeddings:
+      tvars = [var for var in tvars if 'bert/embeddings' not in var.name]
 
   grads = tf.gradients(loss, tvars)
 
