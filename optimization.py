@@ -71,7 +71,7 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu, 
   if freeze_layers_num > 0:
     indices = list(range(0, freeze_layers_num))
     for idx in indices:
-      tvars = [var for var in tvars if 'bert/encoder/layer_{}'.format(idx) not in var.name]
+      tvars = [var for var in tvars if 'bert/encoder/layer_{}/attention'.format(idx) not in var.name]
 
   grads = tf.gradients(loss, tvars)
 
